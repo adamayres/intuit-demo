@@ -4,3 +4,9 @@ rich
 pytest
 pytest-cov
 coverage
+notebook
+seaborn
+xgboost
+shap
+matplotlib
+scikit-learn
