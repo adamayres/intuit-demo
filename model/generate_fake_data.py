@@ -2,34 +2,38 @@ import pandas as pd
 import numpy as np
 import os
 from rich import print
+from pathlib import Path
+
 
 def generate_fake_data(output_dir="../generated", filename="training_data.csv", n_rows=500, random_seed=42):
   """
-    Generate synthetic training data for the refund delay prediction model.
+  Generate synthetic training data for the refund delay prediction model.
 
-    This function creates a synthetic dataset simulating user tax return data
-    for training machine learning models. It includes categorical, boolean,
-    and numeric features relevant to predicting refund delays. The output
-    is saved as a CSV file in the specified output directory.
+  This function creates a synthetic dataset simulating user tax return data
+  for training machine learning models. It includes categorical, boolean,
+  and numeric features relevant to predicting refund delays. The output
+  is saved as a CSV file in the specified output directory.
 
-    Args:
-      output_dir (str, optional): Directory where the CSV file will be saved. Defaults to "../generated".
-      filename (str, optional): Name of the CSV file. Defaults to "training_data.csv".
-      n_rows (int, optional): Number of rows to generate. Defaults to 500.
-      random_seed (int, optional): Random seed for reproducibility. Defaults to 42.
+  Args:
+    output_dir (str, optional): Directory where the CSV file will be saved. Defaults to "../generated".
+    filename (str, optional): Name of the CSV file. Defaults to "training_data.csv".
+    n_rows (int, optional): Number of rows to generate. Defaults to 500.
+    random_seed (int, optional): Random seed for reproducibility. Defaults to 42.
 
-    Returns:
-      str: Absolute path to the generated CSV file.
+  Returns:
+    str: Absolute path to the generated CSV file.
 
-    Example:
-      >>> generate_fake_data(output_dir="../generated", filename="training_data.csv", n_rows=1000)
-      '/absolute/path/to/training_data.csv'
-    """
+  Example:
+    >>> generate_fake_data(output_dir="../generated", filename="training_data.csv", n_rows=1000)
+    '/absolute/path/to/training_data.csv'
+  """
 
   rng = np.random.default_rng(seed=random_seed)
 
   os.makedirs(output_dir, exist_ok=True)
-  output_path = os.path.abspath(os.path.join(output_dir, filename))
+
+  output_path = Path(output_dir) / filename
+  output_path = output_path.resolve()
 
   # Enums
   filing_method_choices = [
