@@ -9,3 +9,5 @@ venv/
 .venv/
 .env
 .idea/
+generated/
+htmlcov/

@@ -1,0 +1,6 @@
+pandas
+numpy
+rich
+pytest
+pytest-cov
+coverage
