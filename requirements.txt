@@ -10,3 +10,8 @@ xgboost
 shap
 matplotlib
 scikit-learn
+pydantic
+fastapi
+scipy
+ipywidgets
+joblib

@@ -3,6 +3,7 @@ import xgboost as xgb
 import subprocess
 import sys
 from model.train_model import train_model
+import numpy as np
 
 
 def test_train_model(tmp_path):
@@ -40,21 +41,22 @@ def test_train_model(tmp_path):
   df.to_csv(input_csv, index=False)
 
   # ----- Run your function -----
-  trained_model, X_encoded, X_test, X_train, dtest, y_test, y_train = train_model(str(input_csv))
+  res = train_model(str(input_csv))
 
   # ----- Basic assertions -----
 
   # Check types
-  assert isinstance(trained_model, xgb.Booster)
-  assert isinstance(X_encoded, pd.DataFrame)
-  assert isinstance(X_test, pd.DataFrame)
-  assert isinstance(X_train, pd.DataFrame)
-  assert isinstance(dtest, xgb.DMatrix)
-  assert isinstance(y_test, pd.Series)
-  assert isinstance(y_train, pd.Series)
+  assert isinstance(res.model, xgb.Booster)
+  assert isinstance(res.X_encoded, pd.DataFrame)
+  assert isinstance(res.X_test, pd.DataFrame)
+  assert isinstance(res.X_train, pd.DataFrame)
+  assert isinstance(res.dtest, xgb.DMatrix)
+  assert isinstance(res.y_test, pd.Series)
+  assert isinstance(res.y_train, pd.Series)
+  assert isinstance(res.y_values, np.ndarray)
 
   # Check that data shapes match
-  assert X_test.shape[0] == y_test.shape[0]
+  assert res.X_test.shape[0] == res.y_test.shape[0]
 
   # Check expected columns exist
   expected_columns = [
@@ -67,11 +69,11 @@ def test_train_model(tmp_path):
   ]
 
   for col in expected_columns:
-    assert col in X_encoded.columns
+    assert col in res.X_encoded.columns
 
   # Check the model can predict
-  predictions = trained_model.predict(dtest)
-  assert predictions.shape[0] == y_test.shape[0]
+  predictions = res.model.predict(res.dtest)
+  assert predictions.shape[0] == res.y_test.shape[0]
 
 
 def test_train_model_cli(tmp_path):
