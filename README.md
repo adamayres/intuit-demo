@@ -11,24 +11,44 @@ or use of this material is strictly prohibited.
 
 ## Commands
 
-Generate fake test data.
+### Install dependencies
 ```
-make generate-fake-data
+make install
 ```
 
-Run tests
+### Run tests
 ```
 make test
 ```
 
-Run test coverage report
+### View test coverage report
 ```
 make coverage
 ```
 
-Clean generated directories
+### Clean generated directories
 ```
 make clean
+```
+
+### Generate fake test data.
+```
+make generate-fake-data
+```
+
+### Train the AI model
+```
+make train-model
+```
+
+### Run the prediction service
+```
+make prediction-service
+```
+
+### Start Jupyter Notebook
+```
+jupyter lab
 ```
 
 ## Model Features
