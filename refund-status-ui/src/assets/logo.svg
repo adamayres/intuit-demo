@@ -1,0 +1,28 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="64"
+  height="64"
+  viewBox="0 0 24 24"
+  fill="none"
+>
+  <!-- White background -->
+  <rect width="24" height="24" rx="4" fill="white" />
+
+  <!-- Purple document outline -->
+  <path
+    d="M7 7H17V17H7V7Z"
+    stroke="oklch(0.623 0.214 259.815)"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- Purple checkmark -->
+  <path
+    d="M9 12L11 14L15 10"
+    stroke="oklch(0.623 0.214 259.815)"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>
