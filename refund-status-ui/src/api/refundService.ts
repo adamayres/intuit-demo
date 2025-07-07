@@ -1,18 +1,13 @@
 import type { RefundStatus } from '@/types/RefundStatusTypes.ts';
+import type { RefundPrediction } from '@/types/RefundPredictionTypes.ts';
+
+export type RefundStatusResponse = { refundStatus: RefundStatus; prediction: RefundPrediction };
 
 /**
  * Mock API service to fetch refund status data.
- *
- * //TODO: Replace with actual API calls when available.
  */
-export async function getRefundStatus(mockedResponse?: RefundStatus): Promise<RefundStatus> {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      const mockResponse: RefundStatus = mockedResponse ?? {
-        status: 'ReturnReceived',
-        lastUpdated: new Date().toISOString()
-      };
-      resolve(mockResponse);
-    }, 1000);
-  });
+export async function getRefundStatus(): Promise<RefundStatusResponse> {
+  const response = await fetch('http://localhost:3000/refund-status', { credentials: 'include' });
+  // TODO: Handle errors appropriately in production code
+  return (await response.json()) as RefundStatusResponse;
 }

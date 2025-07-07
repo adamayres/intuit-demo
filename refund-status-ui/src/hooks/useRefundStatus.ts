@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
-import { getRefundStatus } from '../api/refundService.ts';
-import type { RefundStatus } from '@/types/RefundStatusTypes.ts';
+import { getRefundStatus, type RefundStatusResponse } from '../api/refundService.ts';
 
 export type UseRefundStatusResult = {
   /**
    * Current refund status.
    */
-  status: RefundStatus | null;
+  status: RefundStatusResponse | null;
   /**
    * Loading state indicating if the refund status is being fetched.
    */
@@ -18,7 +17,7 @@ export type UseRefundStatusResult = {
   /**
    * Function to refresh the refund status.
    */
-  refresh: (mockedResponse?: RefundStatus) => void;
+  refresh: () => void;
 };
 
 /**
@@ -27,13 +26,13 @@ export type UseRefundStatusResult = {
  * @returns {UseRefundStatusResult} - The current refund status, loading state, error message, and a refresh function.
  */
 export function useRefundStatus(): UseRefundStatusResult {
-  const [status, setStatus] = useState<RefundStatus | null>(null);
+  const [status, setStatus] = useState<RefundStatusResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  function getRefundStatusInternal(mockedResponse?: RefundStatus) {
+  function getRefundStatusInternal() {
     setLoading(true);
-    getRefundStatus(mockedResponse)
+    getRefundStatus()
       .then(setStatus)
       .catch(error => {
         setError(error?.message ?? 'Failed to load refund status');

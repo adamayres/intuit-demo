@@ -16,5 +16,5 @@ export type RefundStatusType =
  */
 export type RefundStatus = {
   status: RefundStatusType;
-  lastUpdated: string;
+  lastCheckedAt: string;
 };

@@ -32,10 +32,9 @@ export function RefundStatusPage() {
     <div className="max-w-xl mx-auto mt-10 px-4">
       {status && (
         <RefundStatusCard
-          refundStatus={status}
-          onRefresh={() =>
-            refresh({ status: 'RefundApproved', lastUpdated: new Date().toISOString() })
-          }
+          refundStatus={status.refundStatus}
+          refundPrediction={status.prediction}
+          onRefresh={refresh}
           loading={loading}
         />
       )}
