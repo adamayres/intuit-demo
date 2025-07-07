@@ -7,7 +7,7 @@ async function createTables() {
     user: "intuit_demo",
     host: "localhost",
     database: "intuit_demo_db",
-    password: "supersecret",
+    password: "intuit",
     port: 5432,
   });
 
@@ -71,7 +71,8 @@ async function createTables() {
         has_bank_info_on_file BOOLEAN,
         num_days_since_filed INT,
         return_completeness_score FLOAT,
-        prior_refund_processing_time FLOAT
+        prior_refund_processing_time FLOAT,
+        filed_at TIMESTAMP
       );
     `);
 
