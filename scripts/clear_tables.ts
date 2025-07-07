@@ -7,7 +7,7 @@ async function clearTables() {
     user: "intuit_demo",
     host: "localhost",
     database: "intuit_demo_db",
-    password: "supersecret",
+    password: "intuit",
     port: 5432,
   });
 
