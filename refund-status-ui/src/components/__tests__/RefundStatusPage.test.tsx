@@ -47,8 +47,8 @@ describe('RefundStatusPage', () => {
     vi.spyOn(useRefundStatusModule, 'useRefundStatus').mockReturnValue({
       loading: false,
       status: {
-        status: 'ReturnProcessing',
-        lastUpdated: new Date().toISOString()
+        refundStatus: { status: 'ReturnProcessing', lastCheckedAt: new Date().toISOString() },
+        prediction: fakePrediction
       },
       refresh: vi.fn(),
       error: null
@@ -67,8 +67,8 @@ describe('RefundStatusPage', () => {
     vi.spyOn(useRefundStatusModule, 'useRefundStatus').mockReturnValue({
       loading: false,
       status: {
-        status: 'RefundApproved',
-        lastUpdated: new Date().toISOString()
+        refundStatus: { status: 'RefundApproved', lastCheckedAt: new Date().toISOString() },
+        prediction: fakePrediction
       },
       refresh: vi.fn(),
       error: null
