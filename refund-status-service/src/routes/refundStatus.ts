@@ -38,7 +38,7 @@ router.get('/', async (req: AuthRequest, res: Response) => {
       needsIRSRefresh = true;
     } else {
       const lastChecked = dayjs(refundStatus.last_checked_at);
-      if (now.diff(lastChecked, 'hour') >= 24) {
+      if (now.diff(lastChecked, 'minute') >= 30) {
         needsIRSRefresh = true;
       }
     }

@@ -4,7 +4,7 @@ export const refundStatusLabels: Record<RefundStatusType, string> = {
   ReturnReceived: 'Return Received',
   ReturnProcessing: 'Return Processing',
   NeedMoreInformation: 'Need More Information',
-  RefundApproved: 'Refund Approved',
+  RefundApproved: 'Refund Accepted',
   RefundSent: 'Refund Sent',
   RefundAdjusted: 'Refund Adjusted',
   RefundDelayed: 'Refund Delayed',

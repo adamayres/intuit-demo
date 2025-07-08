@@ -10,7 +10,6 @@ export function isPredictable(status: RefundStatusType): boolean {
     'ReturnReceived',
     'RefundAdjusted',
     'RefundApproved',
-    'RefundSent',
     'ReturnProcessing'
   ];
 

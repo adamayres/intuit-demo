@@ -10,8 +10,8 @@ interface RefundRow {
   refund_delay_days: string;
 }
 
-const createFakeRefundStatuses = false;
-const createFakePredictions = false;
+const createFakeRefundStatuses = true;
+const createFakePredictions = true;
 
 async function run() {
   const client = new Client({
@@ -54,7 +54,7 @@ async function run() {
     const userId = userRes.rows[0].user_id;
 
     const filedAt = faker.date.between({
-      from: "2025-06-01",
+      from: "2025-07-03",
       to: "2025-07-07",
     });
 
@@ -136,10 +136,8 @@ async function run() {
 
     const returnId = taxReturnRes.rows[0].return_id;
 
-    // randomly decide if this return gets a refund_status or prediction
-    if (Math.random() < 0.5) {
+    if (userId < 50) {
       returnsNeedingRefundStatus.push(returnId);
-    } else {
       returnsNeedingPrediction.push(returnId);
     }
   }
@@ -152,6 +150,31 @@ async function run() {
       const row = faker.helpers.arrayElement(rows);
       const refundDelay = parseFloat(row.refund_delay_days);
 
+      const possibleStatuses = [
+        'ReturnReceived',
+        'NeedMoreInformation',
+        'RefundDelayed',
+        'RefundDenied',
+        'RefundApproved',
+        'ReturnProcessing',
+        'RefundAdjusted',
+        'RefundSent'
+      ];
+
+      let status;
+      let lastCheckedAt;
+
+      if (returnId < 9) {
+        status = possibleStatuses[returnId - 1];
+        lastCheckedAt = new Date();
+      } else {
+        status = faker.helpers.arrayElement(possibleStatuses);
+        lastCheckedAt = faker.date.between({
+          from: new Date(Date.now() - 2 * 60 * 60 * 1000),
+          to: new Date(),
+        });
+      }
+
       await client.query(
         `INSERT INTO refund_status (return_id,
                                     status,
@@ -160,18 +183,9 @@ async function run() {
          VALUES ($1, $2, $3, $4)`,
         [
           returnId,
-          faker.helpers.arrayElement([
-            'ReturnReceived',
-            'ReturnProcessing',
-            'NeedMoreInformation',
-            'RefundApproved',
-            'RefundSent',
-            'RefundAdjusted',
-            'RefundDelayed',
-            'RefundDenied',
-          ]),
+          status,
           refundDelay,
-          new Date(),
+          lastCheckedAt,
         ]
       );
     }
@@ -184,11 +198,84 @@ async function run() {
       const row = faker.helpers.arrayElement(rows);
       const refundDelay = parseFloat(row.refund_delay_days);
 
-      const reasonsObj = {
-        days_since_filing: faker.number.float({min: -3, max: 3, fractionDigits: 2}),
-        has_prior_delays: faker.number.float({min: -3, max: 3, fractionDigits: 2}),
-        filing_method: faker.number.float({min: -3, max: 3, fractionDigits: 2}),
-      };
+      const possibleReasons = [
+        "filing_method",
+        "filing_time_category",
+        "bank_deposit_type",
+        "geo_region",
+        "prior_credits_claimed",
+        "has_return_errors",
+        "requires_id_verification",
+        "is_selected_for_manual_review",
+        "claimed_eitc",
+        "claimed_actc",
+        "is_amended_return",
+        "has_injured_spouse_claim",
+        "has_offset_debts",
+        "prior_refund_delayed",
+        "prior_id_verification_flagged",
+        "has_bank_info_on_file",
+        "num_days_since_filed",
+        "return_completeness_score",
+        "prior_refund_processing_time"
+      ];
+
+      const fasterReasons = new Set([
+        "filing_method",
+        "filing_time_category",
+        "has_bank_info_on_file",
+        "return_completeness_score"
+      ]);
+
+      const slowerReasons = new Set([
+        "requires_id_verification",
+        "has_return_errors",
+        "is_selected_for_manual_review",
+        "claimed_eitc",
+        "claimed_actc",
+        "is_amended_return",
+        "has_injured_spouse_claim",
+        "has_offset_debts",
+        "prior_refund_delayed",
+        "prior_id_verification_flagged",
+        "prior_refund_processing_time",
+        "num_days_since_filed"
+      ]);
+
+      // Shuffle and pick 3 reasons
+      const reasonsShuffled = faker.helpers.shuffle(possibleReasons);
+      const selectedReasons = reasonsShuffled.slice(0, 3);
+
+      const reasonsObj = selectedReasons.map((reason) => {
+        let impactValue: number;
+
+        if (fasterReasons.has(reason)) {
+          // Faster reasons → negative impact
+          impactValue = faker.number.float({
+            min: -3,
+            max: -0.1,
+            fractionDigits: 2
+          });
+        } else if (slowerReasons.has(reason)) {
+          // Slower reasons → positive impact
+          impactValue = faker.number.float({
+            min: 0.1,
+            max: 3,
+            fractionDigits: 2
+          });
+        } else {
+          // Neutral → random sign
+          impactValue = faker.helpers.arrayElement([
+            faker.number.float({ min: -3, max: -0.1, fractionDigits: 2 }),
+            faker.number.float({ min: 0.1, max: 3, fractionDigits: 2 })
+          ]);
+        }
+
+        return {
+          feature: reason,
+          impact: impactValue
+        };
+      });
 
       await client.query(
         `INSERT INTO prediction (return_id,
