@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getRefundStatus, type RefundStatusResponse } from '../api/refundService.ts';
 
 export type UseRefundStatusResult = {
@@ -28,7 +28,9 @@ export type UseRefundStatusResult = {
 export function useRefundStatus(): UseRefundStatusResult {
   const [status, setStatus] = useState<RefundStatusResponse | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const hasFetched = useRef(false);
 
   function getRefundStatusInternal() {
     setLoading(true);
@@ -41,6 +43,10 @@ export function useRefundStatus(): UseRefundStatusResult {
   }
 
   useEffect(() => {
+    if (hasFetched.current) return;
+
+    hasFetched.current = true;
+
     getRefundStatusInternal();
   }, []);
 
